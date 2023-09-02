@@ -1,10 +1,24 @@
 bring cloud;
+bring ex;
 
-let q = new cloud.Queue();
 let b = new cloud.Bucket();
+let r = new ex.Redis();
 
-new cloud.Function(inflight (t: num, m: str) => {
-  if m == "c" {
-    q.push((t * 9 / 5) + 32);
+let getMode = new cloud.Function(inflight (t: str) => {
+  r.set("mode", t);
+}) as "getMode";
+
+let getTemp = new cloud.Function(inflight (t: str) => {
+  r.set("temp", t);
+}) as "getTemp";
+
+let convert = new cloud.Function(inflight () => {
+  let mode = r.get("mode");
+  let tempStr = r.get("temp");
+  let temp = parseFloat(tempStr);+
+  if (mode == "C") {
+    b.put("temp.txt", (temp * 9 / 5 + 32));
+  } else {
+    b.put("temp.txt"((temp - 32) * 5 / 9));
   }
-});
+}) as "convert";

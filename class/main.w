@@ -13,13 +13,14 @@ class Store {
     inflight store(data: str) {
         this.storeBucket.put("data.txt", data);
         this.storeRedis.set("data", data);
+        log("Hello ${data}");
     }
 }
 
-let worldStore = new Store() as "World Store";
-let wingStore = new Store() as "Wing Store";
+let worldStore = new Store() as "WorldStore";
+let wingStore = new Store() as "WingStore";
 
 let hello = new cloud.Function(inflight () => {
     worldStore.store("World");
     wingStore.store("Wing");
-});
+}) as "Hello";
