@@ -14,11 +14,11 @@ let getTemp = new cloud.Function(inflight (t: str) => {
 
 let convert = new cloud.Function(inflight () => {
   let mode = r.get("mode");
-  let tempStr = r.get("temp");
-  let temp = parseFloat(tempStr);+
+  let var tempStr = r.get("temp");
+  let temp = num.fromStr(tempStr);
   if (mode == "C") {
     b.put("temp.txt", (temp * 9 / 5 + 32));
   } else {
-    b.put("temp.txt"((temp - 32) * 5 / 9));
+    b.put("temp.txt", ((temp - 32) * 5 / 9));
   }
 }) as "convert";
